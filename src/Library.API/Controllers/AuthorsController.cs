@@ -23,35 +23,17 @@ namespace Library.API.Controllers
         [HttpGet()]
         public IActionResult GetAuthors()
         {
-            var authorsFromRepo = _libraryRepository.GetAuthors();
 
-            //Example of mapping from Author to AuthorDto with foreach
-            //var authors = new List<AuthorDto>();
-            //foreach (var author in authorsFromRepo)
-            //{
-            //    authors.Add(new AuthorDto()
-            //    {
-            //        Id = author.Id,
-            //        Name = $"{author.FirstName} {author.LastName}",
-            //        Genre = author.Genre,
-            //        Age = author.DateOfBirth.GetCurrentAge()
-            //    });
-            //}
+                var authorsFromRepo = _libraryRepository.GetAuthors();
 
-            var authors = Mapper.Map<IEnumerable<AuthorDto>>(authorsFromRepo);
+                var authors = Mapper.Map<IEnumerable<AuthorDto>>(authorsFromRepo);
 
-            return Ok(authors);
+                return Ok(authors);
         }
 
         [HttpGet("{id}")]
         public IActionResult GetAuthor(Guid id)
         {
-            //Check if there is an author with that id 
-            //if (!_libraryRepository.AuthorExists(id))
-            //{
-            //    return NotFound();
-            //}
-
             var authorFromRepo = _libraryRepository.GetAuthor(id);
 
             if (authorFromRepo == null)
