@@ -51,6 +51,8 @@ namespace Library.API.Controllers
             {
                 return BadRequest();
             }
+
+            var authorEntities = _libraryRepository.GetAuthors(ids);
         }
     }
 }
