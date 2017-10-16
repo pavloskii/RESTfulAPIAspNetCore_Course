@@ -41,11 +41,14 @@ namespace Library.API.Controllers
                 throw new Exception("Creating an author collection failed on save.");
             }
 
-            return Ok();
+            var authorCollectionToReturn = Mapper.Map<IEnumerable<AuthorDto>>(authorEntities);
+            var idsAsString = string.Join(",", authorCollectionToReturn.Select(a => a.Id));
+
+            return CreatedAtRoute("GetAuthorCollection", new { ids = idsAsString }, authorCollectionToReturn);
         }
 
-        [HttpGet("({ids})")]
-        public IActionResult GetAuthorCollection([ModelBinder(BinderType = typeof(ArrayModelBinder)] IEnumerable<Guid> ids)
+        [HttpGet("({ids})", Name ="GetAuthorCollection")]
+        public IActionResult GetAuthorCollection([ModelBinder(BinderType = typeof(ArrayModelBinder))] IEnumerable<Guid> ids)
         {
             if (ids == null)
             {
@@ -53,6 +56,15 @@ namespace Library.API.Controllers
             }
 
             var authorEntities = _libraryRepository.GetAuthors(ids);
+
+            if (ids.Count() != authorEntities.Count())
+            {
+                return NotFound();
+            }
+
+            var authorsToReturn = Mapper.Map<IEnumerable<AuthorDto>>(authorEntities);
+
+            return Ok(authorsToReturn);
         }
     }
 }

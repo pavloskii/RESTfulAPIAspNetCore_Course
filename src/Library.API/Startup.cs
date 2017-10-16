@@ -38,7 +38,10 @@ namespace Library.API
             services.AddMvc(setupAction =>
             {
                 setupAction.ReturnHttpNotAcceptable = true;
+                //This allows sending Xml body
                 setupAction.OutputFormatters.Add(new XmlDataContractSerializerOutputFormatter());
+                //This allows accepting Xml body
+                setupAction.InputFormatters.Add(new XmlDataContractSerializerInputFormatter());
             });
 
             // register the DbContext on the container, getting the connection string from
