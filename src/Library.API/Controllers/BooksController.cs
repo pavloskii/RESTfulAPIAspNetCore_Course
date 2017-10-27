@@ -136,6 +136,7 @@ namespace Library.API.Controllers
             }
 
             return NoContent();
+            //Update BookForAuthor before UPSERTING (tull now it doesnt create new book if the book id dont exist)
         }
     }
 }
