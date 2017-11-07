@@ -119,7 +119,7 @@ namespace Library.API.Controllers
                 throw new Exception($"Deleting book {id} for author {authorId} failed on save");
             }
 
-            _logger.LogInformation(100, $"Book {id} fro author {authorId} was deleted.");
+            _logger.LogInformation(100, $"Book {id} for author {authorId} was deleted.");
 
             return NoContent();
         }
