@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 
 namespace Library.API.Services
 {
-    public class TypeHelperService
+    public class TypeHelperService: ITypeHelperService
     {
         public bool TypeHasProperties<T>(string fields)
         {
@@ -24,7 +25,20 @@ namespace Library.API.Services
                 //trim each field as it might containt leading or trailing spaces. Cant trim the var in 
                 //foreach, so use another var.
                 var propertyName = field.Trim();
+
+                //use reflection to check if the property can be found on T
+                var propertyInfo = typeof(T)
+                    .GetProperty(propertyName, BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance);
+
+                // it cant be found, return false
+                if (propertyInfo == null)
+                {
+                    return false;
+                }
             }
+
+            //all checks out, return true
+            return true;
         }
     }
 }
