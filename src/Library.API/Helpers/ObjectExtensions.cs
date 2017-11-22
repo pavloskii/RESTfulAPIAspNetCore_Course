@@ -28,8 +28,42 @@ namespace Library.API.Helpers
                 {
                     //get the value of the property on the source object
                     var propertyValue = propertyInfo.GetValue(source);
+
+                    //add the field to the expandoobject
+                    ((IDictionary<string, object>)dataShapedObject).Add(propertyInfo.Name, propertyValue);
                 }
+
+                return dataShapedObject;
             }
+
+            // the field are separated by "," so we split it
+            var fieldsAfterSplit = fields.Split(',');
+
+            foreach (var field in fieldsAfterSplit)
+            {
+                //trim each field as it might containt leading or trailing spaces. Cant trim the var in 
+                //foreach, so use another var.
+                var propertyName = field.Trim();
+
+                //use reflection to get the property on the source object
+                // we need to include public and instance, because specifying a binding flag overwrites the
+                // already existing binding flags.
+                var propertyInfo = typeof(TSource)
+                    .GetProperty(propertyName, BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance);
+
+                if (propertyInfo == null)
+                {
+                    throw new Exception($"Property {propertyName} wasn't found on {typeof(TSource)}");
+                }
+
+                // get the value of the property on the source object
+                var propertyValue = propertyInfo.GetValue(source);
+
+                //add the field to the expandobject
+                ((IDictionary<string, object>)dataShapedObject).Add(propertyInfo.Name, propertyValue);
+            }
+
+            return dataShapedObject;
         }
     }
 }
